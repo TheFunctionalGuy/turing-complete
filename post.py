@@ -3,14 +3,14 @@ import argparse
 import fileinput
 
 
-def post_process(files):
+def post_process(files, comments):
     lines = fileinput.input(files=files if len(files) > 0 else ('-', ))
     post_processed_lines = []
 
     for line in lines:
-        # Remove header if directly piped from tool output
+        # Remove header
         if fileinput.isstdin() and fileinput.isfirstline():
-            [next(lines) for _ in range(3)]
+            [next(lines) for _ in range(1)]
             continue
 
         # Strip line and skip if empty
@@ -18,9 +18,16 @@ def post_process(files):
         if not line:
             continue
 
-        opcodes = line.split(',')
+        # Get tokens
+        left, asm = line.split(' ; ')
+        outp, addr, opcode = left.split(' | ')
 
-        post_processed_lines.extend([f'{opcode.strip()}' for opcode in opcodes if opcode.strip()])
+        # Skip labels
+        if opcode.strip():
+            if comments:
+                post_processed_lines.append(' '.join(f'0x{hex}' for hex in opcode.strip().split(' ')) + ' # ' + asm)
+            else:
+                post_processed_lines.append(' '.join(f'0x{hex}' for hex in opcode.strip().split(' ')))
 
     return post_processed_lines
 
@@ -41,6 +48,7 @@ def write_output(lines, output_file):
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Post-process assembly output from customasm tool.')
     parser.add_argument('-o', '--output', help='Output file')
+    parser.add_argument('-c', '--comments', action='store_true', help='Preserve assembly instructions as comments')
     parser.add_argument('files', metavar='FILE', nargs='*', help='Files to read, if empty stdin will be used instead')
 
     return parser.parse_args()
@@ -48,5 +56,5 @@ def parse_arguments():
 
 if __name__ == '__main__':
     args = parse_arguments()
-    lines = post_process(args.files)
+    lines = post_process(args.files, args.comments)
     write_output(lines, args.output)

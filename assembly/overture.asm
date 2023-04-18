@@ -1,23 +1,11 @@
-#subruledef src_reg
+#subruledef register
 {
-  r0 => 0x00
-  r1 => 0x08
-  r2 => 0x10
-  r3 => 0x18
-  r4 => 0x20
-  r5 => 0x28
-  in => 0x30
-}
-
-#subruledef dst_reg
-{
-  r0  => 0x00
-  r1  => 0x01
-  r2  => 0x02
-  r3  => 0x03
-  r4  => 0x04
-  r5  => 0x05
-  out => 0x06
+  r0 => 0b000
+  r1 => 0b001
+  r2 => 0b010
+  r3 => 0b011
+  r4 => 0b100
+  r5 => 0b101
 }
 
 #ruledef OVERTURE
@@ -34,18 +22,33 @@
   sub  => 0x45
 
   ; Copy
-  mov {src: src_reg}, {dst: dst_reg} => {
-    opcode = 0x80 + src + dst
-    opcode`8
-  }
+  mov {src: register}, {dst: register} => 0b10 @ src @ dst
+  ; Special cases (IO registers)
+  mov in, {dst: register}              => 0b10 @ 0b110 @ dst
+  mov {src: register}, out             => 0b10 @ src   @ 0b110
+  mov in, out                          => 0b10 @ 0b110 @ 0b110
 
   ; Condition
   btm  => 0xC0
+
   ez   => 0xC1
+  ez  {label: u6} => label`8 @ asm { ez }
+
   lz   => 0xC2
+  lz  {label: u6} => label`8 @ asm { lz }
+
   lez  => 0xC3
+  lez  {label: u6} => label`8 @ asm { lez }
+
   top  => 0xC4
+  top  {label: u6} => label`8 @ asm { top }
+
   nez  => 0xC5
+  nez  {label: u6} => label`8 @ asm { nez }
+
   gz   => 0xC6
+  gz  {label: u6} => label`8 @ asm { gz }
+
   gez  => 0xC7
+  gez {label: u6} => label`8 @ asm { gez }
 }

@@ -2,9 +2,9 @@ _default:
     @just --list
 
 # Assemble FILE to stdout
-assemble FILE:
-    @customasm -f hexcomma -p {{FILE}} | python post.py
+assemble FILE *ARGS:
+    @customasm --quiet --print {{FILE}} | python post.py {{ARGS}}
 
 # Assemble FILE to OUTPUT
-assemble-into FILE OUTPUT:
-    @customasm -f hexcomma -p {{FILE}} | python post.py -o {{OUTPUT}}
+assemble-into FILE OUTPUT *ARGS:
+    @customasm --quiet --print {{FILE}} | python post.py -o {{OUTPUT}} {{ARGS}}
