@@ -22,6 +22,8 @@
   and  => 0x43
   add  => 0x44
   sub  => 0x45
+  shl  => 0x46
+  shr  => 0x47
 
   ; Copy
   mov {src: register}, {dst: register} => 0b10 @ src @ dst
