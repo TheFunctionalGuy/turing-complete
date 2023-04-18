@@ -1,5 +1,5 @@
 _default:
-    @just --list
+    @just --list --unsorted
 
 # Assemble FILE to stdout
 assemble FILE *ARGS:

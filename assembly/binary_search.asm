@@ -1,4 +1,4 @@
-#include "overture.asm"
+#include "rules/overture.asm"
 
 ; Load 128 into r3 and r2
 load_mask:

@@ -1,4 +1,4 @@
-#include "overture.asm"
+#include "rules/overture.asm"
 
 mov in, r1
 mov in, r2

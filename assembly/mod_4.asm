@@ -1,4 +1,4 @@
-#include "overture.asm"
+#include "rules/overture.asm"
 
 ; Load mod 4 mask
 ld #3, r2
