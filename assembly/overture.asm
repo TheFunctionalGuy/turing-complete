@@ -11,7 +11,9 @@
 #ruledef OVERTURE
 {
   ; Immediate
-  ld #{value: u6} => value`8
+  ld #{value: u6}                  => value`8
+  ld #{value: u6}, {dst: register} => value`8 @ asm { mov r0, {dst} }
+  ld #{value: u6}, out             => value`8 @ asm { mov r0, out }
 
   ; Compute
   or   => 0x40
@@ -32,23 +34,23 @@
   btm  => 0xC0
 
   ez   => 0xC1
-  ez  {label: u6} => label`8 @ asm { ez }
+  jez  {label: u6} => label`8 @ asm { ez }
 
   lz   => 0xC2
-  lz  {label: u6} => label`8 @ asm { lz }
+  jlz  {label: u6} => label`8 @ asm { lz }
 
   lez  => 0xC3
-  lez  {label: u6} => label`8 @ asm { lez }
+  jlez {label: u6} => label`8 @ asm { lez }
 
   top  => 0xC4
-  top  {label: u6} => label`8 @ asm { top }
+  jmp  {label: u6} => label`8 @ asm { top }
 
   nez  => 0xC5
-  nez  {label: u6} => label`8 @ asm { nez }
+  jnez {label: u6} => label`8 @ asm { nez }
 
   gz   => 0xC6
-  gz  {label: u6} => label`8 @ asm { gz }
+  jgz  {label: u6} => label`8 @ asm { gz }
 
   gez  => 0xC7
-  gez {label: u6} => label`8 @ asm { gez }
+  jgez {label: u6} => label`8 @ asm { gez }
 }
