@@ -29,6 +29,6 @@ turn_around:
 ; Wait until enemies arivec
 wait_for_enemy:
   wait
-  see
-  jez wait_for_enemy 
+  see r3
+  jez wait_for_enemy
   jmp kill_row
